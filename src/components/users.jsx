@@ -1,7 +1,7 @@
 import React from "react";
 import User from "./user";
 
-const Users = ({ users, onDelete, onToggleBookmark, ...rest }) => {
+const Users = ({ users, onDelete, onToggleBookmark }) => {
   return (
     <table className="table">
       <thead>
@@ -18,6 +18,7 @@ const Users = ({ users, onDelete, onToggleBookmark, ...rest }) => {
       <tbody>
         {users.map((user) => (
           <User
+            key={user._id}
             onDelete={onDelete}
             onToggleBookmark={onToggleBookmark}
             {...user}

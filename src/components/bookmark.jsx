@@ -1,10 +1,10 @@
 import React from "react";
 
-const Bookmark = ({ status, ...rest }) => {
-  return !status ? (
-    <i className="bi bi-suit-heart"></i>
-  ) : (
-    <i className="bi bi-suit-heart-fill"></i>
+const Bookmark = ({ id, isFavorite, onToggleBookmark }) => {
+  return (
+    <button onClick={() => onToggleBookmark(id)}>
+      <i className={`bi bi-suit-heart${isFavorite ? "-fill" : ""}`} />
+    </button>
   );
 };
 

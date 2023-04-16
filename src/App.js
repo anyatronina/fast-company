@@ -11,26 +11,24 @@ function App() {
   };
 
   const handleToggleBookmark = (id) => {
-    const newUsersList = users.map((user) => {
+    const newFavorite = users.map((user) => {
       user._id === id && (user.bookmark = !user.bookmark);
       return user;
     });
 
-    setUsers(newUsersList);
+    setUsers(newFavorite);
   };
 
   return (
     <>
-      <SearchStatus length={users.length} />
+      <SearchStatus usersCount={users.length} />
 
-      {users.length !== 0 ? (
+      {users.length > 0 && (
         <Users
           users={users}
           onDelete={handleDelete}
           onToggleBookmark={handleToggleBookmark}
         />
-      ) : (
-        ""
       )}
     </>
   );
