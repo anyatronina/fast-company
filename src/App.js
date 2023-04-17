@@ -11,12 +11,14 @@ function App() {
   };
 
   const handleToggleBookmark = (id) => {
-    const newFavorite = users.map((user) => {
-      user._id === id && (user.bookmark = !user.bookmark);
-      return user;
+    setUsers((prevState) => {
+      return prevState.map((user) => {
+        if (user._id === id) {
+          return { ...user, bookmark: !user.bookmark };
+        }
+        return user;
+      });
     });
-
-    setUsers(newFavorite);
   };
 
   return (
