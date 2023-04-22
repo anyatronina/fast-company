@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const Bookmark = ({ id, isFavorite, onToggleBookmark }) => {
   return (
@@ -6,6 +7,12 @@ const Bookmark = ({ id, isFavorite, onToggleBookmark }) => {
       <i className={`bi bi-suit-heart${isFavorite ? "-fill" : ""}`} />
     </button>
   );
+};
+
+Bookmark.propTypes = {
+  id: PropTypes.number.isRequired,
+  isFavorite: PropTypes.bool.isRequired,
+  onToggleBookmark: PropTypes.func.isRequired
 };
 
 export default Bookmark;
