@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import User from "./user";
 import Pagination from "./pagination";
 import { paginate } from "../utils/paginate";
@@ -8,12 +8,20 @@ const Users = ({ users, onDelete, onToggleBookmark }) => {
   const count = users.length;
   const pageSize = 4;
   const [currentPage, setCurrentPage] = useState(1);
+  let maxPage = 1;
 
   const handlePageChange = (pageIndex) => {
     setCurrentPage(pageIndex);
+    maxPage = pageIndex;
   };
 
   const userCrop = paginate(users, currentPage, pageSize);
+
+  useEffect(() => {
+    // const isNullPage = currentPage > maxPage && userCrop.length === 0;
+    if (currentPage > maxPage && userCrop.length === 0)
+      return setCurrentPage(currentPage - 1);
+  }, [users]);
 
   return (
     <>
