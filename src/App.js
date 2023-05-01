@@ -9,7 +9,7 @@ function App() {
     api.users.fetchAll().then((data) => {
       setUsers(data);
     });
-  });
+  }, []);
 
   const handleDelete = (userId) => {
     setUsers((prevState) => prevState.filter((user) => user._id !== userId));

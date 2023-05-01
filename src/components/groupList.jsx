@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { isArray } from "lodash";
 
 const GroupList = ({
   items,
@@ -9,7 +8,7 @@ const GroupList = ({
   onItemSelect,
   selectedItem
 }) => {
-  const itemsArr = isArray(items) ? items : Object.values(items);
+  const itemsArr = Array.isArray(items) ? items : Object.values(items);
   return (
     <ul className="list-group">
       {itemsArr.map((item) => (
