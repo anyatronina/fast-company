@@ -14,7 +14,7 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
   };
 
   const iconSort = (column) => {
-    if (selectedSort.path === columns[column].path) {
+    if (columns[column].path && selectedSort.path === columns[column].path) {
       return (
         <>
           {columns[column].name}
