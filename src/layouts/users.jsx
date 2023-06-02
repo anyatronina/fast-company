@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Pagination from "../components/pagination";
 import GroupList from "../components/groupList";
 import SearchStatus from "../components/searchStatus";
+import SearchBox from "../components/searchBox";
 import api from "../api";
 import { paginate } from "../utils/paginate";
 import PropTypes from "prop-types";
@@ -15,6 +16,7 @@ const Users = () => {
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
   const [users, setUsers] = useState();
+  const [searchString, setSearchString] = useState("");
 
   useEffect(() => {
     api.users.fetchAll().then((data) => {
@@ -38,6 +40,7 @@ const Users = () => {
   };
 
   const handleProfessionSelect = (item) => {
+    setSearchString("");
     setSelectedProf(item);
   };
 
@@ -45,12 +48,24 @@ const Users = () => {
     setCurrentPage(pageIndex);
   };
 
-  // const clearFilter = () => {
-  //   setSelectedProf();
-  // };
-
   const handleSort = (item) => {
     setSortBy(item);
+  };
+
+  const handleSearchUser = ({ target }) => {
+    setSelectedProf();
+    const lettersRegExp = /^([a-zа-яё]* )$/gi;
+    if (lettersRegExp.test(target.value)) setSearchString(target.value);
+  };
+
+  const getFilteredUsers = (selectedProf, searchString) => {
+    if (selectedProf)
+      return users.filter((user) => user.profession._id === selectedProf._id);
+    if (searchString.trim() !== "") {
+      const nameRegExp = new RegExp(searchString, "gi");
+      return users.filter((user) => nameRegExp.test(user.name));
+    }
+    return users;
   };
 
   useEffect(() => {
@@ -65,41 +80,26 @@ const Users = () => {
 
   useEffect(() => {
     if (users) {
-      const filteredUsers = selectedProf
-        ? users.filter((user) => user.profession._id === selectedProf._id)
-        : users;
+      const filteredUsers = getFilteredUsers(selectedProf, searchString);
       const usersCrop = paginate(filteredUsers, currentPage, pageSize);
 
       if (usersCrop.length === 0 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
     }
-  }, [users]);
+  }, [users, searchString]);
 
   if (users) {
-    const filteredUsers = selectedProf
-      ? users.filter((user) => user.profession._id === selectedProf._id)
-      : users;
+    const filteredUsers = getFilteredUsers(selectedProf, searchString);
 
     const count = filteredUsers.length;
     const sortedUsers = _.orderBy(filteredUsers, sortBy.path, sortBy.order);
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
     const clearFilter = () => {
+      setSearchString("");
       setSelectedProf();
     };
-
-    // const filteredUsers = selectedProf
-    //   ? users.filter((user) => user.profession._id === selectedProf._id)
-    //   : users;
-    // const count = filteredUsers.length;
-    // const sortedUsers = _.orderBy(filteredUsers, sortBy.path, sortBy.order);
-    // const userCrop = paginate(sortedUsers, currentPage, pageSize);
-
-    // useEffect(() => {
-    //   if (currentPage > maxPage && userCrop.length === 0)
-    //     setCurrentPage(currentPage - 1);
-    // }, [users]);
 
     return (
       <div className="d-flex">
@@ -117,6 +117,7 @@ const Users = () => {
         )}
         <div className="d-flex flex-column">
           <SearchStatus usersCount={count} />
+          <SearchBox value={searchString} onChange={handleSearchUser} />
           {count > 0 && (
             <UserTable
               users={userCrop}
