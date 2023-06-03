@@ -5,7 +5,6 @@ import SearchStatus from "../components/searchStatus";
 import SearchBox from "../components/searchBox";
 import api from "../api";
 import { paginate } from "../utils/paginate";
-import PropTypes from "prop-types";
 import UserTable from "../components/usersTable";
 import _ from "lodash";
 
@@ -54,16 +53,16 @@ const Users = () => {
 
   const handleSearchUser = ({ target }) => {
     setSelectedProf();
-    const lettersRegExp = /^([a-zа-яё]* )$/gi;
-    if (lettersRegExp.test(target.value)) setSearchString(target.value);
+    setSearchString(target.value);
   };
 
   const getFilteredUsers = (selectedProf, searchString) => {
     if (selectedProf)
       return users.filter((user) => user.profession._id === selectedProf._id);
     if (searchString.trim() !== "") {
-      const nameRegExp = new RegExp(searchString, "gi");
-      return users.filter((user) => nameRegExp.test(user.name));
+      return users.filter((user) =>
+        user.name.toLowerCase().includes(searchString.toLowerCase())
+      );
     }
     return users;
   };
@@ -115,7 +114,7 @@ const Users = () => {
             </button>
           </div>
         )}
-        <div className="d-flex flex-column">
+        <div className="d-flex flex-column flex-grow-1">
           <SearchStatus usersCount={count} />
           <SearchBox value={searchString} onChange={handleSearchUser} />
           {count > 0 && (
@@ -140,12 +139,6 @@ const Users = () => {
     );
   }
   return <h6>Loading...</h6>;
-};
-
-Users.propTypes = {
-  users: PropTypes.array.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onToggleBookmark: PropTypes.func.isRequired
 };
 
 export default Users;
