@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Pagination from "../components/pagination";
-import GroupList from "../components/groupList";
-import SearchStatus from "../components/searchStatus";
-import SearchBox from "../components/searchBox";
-import api from "../api";
-import { paginate } from "../utils/paginate";
-import UserTable from "../components/usersTable";
+import Pagination from "../../common/pagination";
+import GroupList from "../../common/groupList";
+import SearchStatus from "../../ui/searchStatus";
+import SearchBox from "../../common/searchBox";
+import api from "../../../api";
+import { paginate } from "../../../utils/paginate";
+import UserTable from "../../ui/usersTable";
 import _ from "lodash";
 
-const UsersList = () => {
+const UsersListPage = () => {
   const pageSize = 4;
   const [currentPage, setCurrentPage] = useState(1);
   const [professions, setProfessions] = useState();
@@ -20,6 +20,10 @@ const UsersList = () => {
   useEffect(() => {
     api.users.fetchAll().then((data) => {
       setUsers(data);
+    });
+
+    api.professions.fetchAll().then((data) => {
+      setProfessions(data);
     });
   }, []);
 
@@ -66,12 +70,6 @@ const UsersList = () => {
     }
     return users;
   };
-
-  useEffect(() => {
-    api.professions.fetchAll().then((data) => {
-      setProfessions(data);
-    });
-  }, []);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -141,4 +139,4 @@ const UsersList = () => {
   return <h6>Loading...</h6>;
 };
 
-export default UsersList;
+export default UsersListPage;

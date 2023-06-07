@@ -16,12 +16,14 @@ module.exports = {
   plugins: ["react", "prettier"],
   rules: {
     "prettier/prettier": "error",
-    indent: ["error", 2, { SwitchCase: 1 }],
+    // indent: ["error", 2, { offsetTernaryExpressions: false }],
+    indent: "off",
     semi: [2, "always"],
     "space-before-function-paren": [
       "error",
       { anonymous: "always", named: "never" }
     ],
+    "multiline-ternary": ["off"],
     quotes: ["error", "double", { allowTemplateLiterals: true }]
   }
 };
