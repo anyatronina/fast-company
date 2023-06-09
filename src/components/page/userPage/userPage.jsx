@@ -31,11 +31,13 @@ const UserPage = ({ userId }) => {
         <h6>completedMeetings: {user.completedMeetings}</h6>
         <h3>Rate: {user.rate}</h3>
 
-        <div className="mb-2">
-          <button onClick={handleEditPage}>Изменить</button>
-        </div>
+        <button className="btn btn-primary me-md-2" onClick={handleUsersList}>
+          Все Пользователи
+        </button>
 
-        <button onClick={handleUsersList}>Все Пользователи</button>
+        <button className="btn btn-danger" onClick={handleEditPage}>
+          Изменить
+        </button>
       </div>
     );
   }

@@ -13,7 +13,7 @@ const EditUserPage = () => {
   const params = useParams();
   const { userId } = params;
   const [user, setUser] = useState();
-  const [professions, setProfessions] = useState();
+  const [professions, setProfessions] = useState("");
   const [qualities, setQualities] = useState();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
@@ -138,7 +138,7 @@ const EditUserPage = () => {
 
   const isValid = Object.keys(errors).length === 0;
 
-  if (user) {
+  if (user && professions !== "") {
     return (
       <div className="container mt-3">
         <div className="row">
