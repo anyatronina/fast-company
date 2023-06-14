@@ -14,7 +14,7 @@ const EditUserPage = () => {
   const { userId } = params;
   const [user, setUser] = useState();
   const [professions, setProfessions] = useState("");
-  const [qualities, setQualities] = useState();
+  const [qualities, setQualities] = useState([]);
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -24,11 +24,20 @@ const EditUserPage = () => {
     });
 
     api.professions.fetchAll().then((data) => {
-      setProfessions(data);
+      const professionsList = Object.keys(data).map((professionName) => ({
+        label: data[professionName].name,
+        value: data[professionName]._id
+      }));
+      setProfessions(professionsList);
     });
 
     api.qualities.fetchAll().then((data) => {
-      setQualities(data);
+      const qualitiesList = Object.keys(data).map((optionName) => ({
+        label: data[optionName].name,
+        value: data[optionName]._id,
+        color: data[optionName].color
+      }));
+      setQualities(qualitiesList);
     });
   }, []);
 
@@ -56,25 +65,22 @@ const EditUserPage = () => {
   }, [data]);
 
   const getProfessionById = (id) => {
-    for (const prof of Object.values(professions)) {
-      if (prof._id === id) {
-        return { _id: prof._id, name: prof.name };
+    for (const prof of professions) {
+      if (prof.value === id) {
+        return { _id: prof.value, name: prof.label };
       }
     }
   };
 
   const getQualities = (elements) => {
     const qualitiesArray = [];
-    for (const elem of Object.values(elements)) {
-      console.log(elem, "elem");
-      for (const quality of Object.values(qualities)) {
-        console.log(quality, "quality");
-        if (elem.value === quality._id) {
-          console.log(quality._id, "123");
+    for (const elem of elements) {
+      for (const quality in qualities) {
+        if (elem.value === qualities[quality].value) {
           qualitiesArray.push({
-            _id: quality._id,
-            name: quality.name,
-            color: quality.color
+            _id: qualities[quality].value,
+            name: qualities[quality].label,
+            color: qualities[quality].color
           });
         }
       }
@@ -84,27 +90,25 @@ const EditUserPage = () => {
 
   const handleChange = (target) => {
     setData((prevState) => ({ ...prevState, [target.name]: target.value }));
-    console.log(data.qualities);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const isValid = validate();
     if (!isValid) return;
+    const { profession, qualities } = data;
+
     api.users.update(userId, {
       ...data,
-      profession: getProfessionById(data.profession),
-      qualities: getQualities(data.qualities)
+      profession: getProfessionById(profession),
+      qualities: getQualities(qualities)
     });
 
-    console.log(
-      {
-        ...data,
-        profession: getProfessionById(data.profession),
-        qualities: getQualities(data.qualities)
-      },
-      "data"
-    );
+    console.log({
+      ...data,
+      profession: getProfessionById(profession),
+      qualities: getQualities(qualities)
+    });
 
     history.push(`/users/${userId}`);
   };
@@ -138,7 +142,7 @@ const EditUserPage = () => {
 
   const isValid = Object.keys(errors).length === 0;
 
-  if (user && professions !== "") {
+  if (user && professions !== "" && qualities.length) {
     return (
       <div className="container mt-3">
         <div className="row">
