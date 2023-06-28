@@ -11,6 +11,7 @@ const SelectField = ({
   error
 }) => {
   const getInputClasses = () => {
+    // return "form-select is-invalid";
     return "form-select" + (error ? " is-invalid" : "");
   };
 
@@ -45,6 +46,7 @@ const SelectField = ({
             </option>
           ))}
       </select>
+
       {error && <div className="invalid-feedback">{error}</div>}
     </div>
   );

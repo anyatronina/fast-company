@@ -74,7 +74,7 @@ const AddCommentForm = ({ onSubmit }) => {
           name="userId"
           value={data.userId}
           defaultOption="Выберите пользователя"
-          errors={errors.userId}
+          error={errors.userId}
         />
         <TextAriaField
           value={data.content}

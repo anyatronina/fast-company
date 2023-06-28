@@ -16,9 +16,9 @@ const UserCard = ({ user }) => {
           className="position-absolute top-0 end-0 btn btn-light btn-sm"
           onClick={handleEditPage}
         >
-          <i className="bi bi-gear"></i>
+          <i className="bi bi-gear" />
         </button>
-        <div className="d-flex flex-column align-items-center text-center position-relative">
+        <div className="d-flex flex-column align-items-center text-center position-relative mx-3">
           <img
             src={`https://avatars.dicebear.com/api/avataaars/${(
               Math.random() + 1
