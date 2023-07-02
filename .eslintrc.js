@@ -15,7 +15,7 @@ module.exports = {
   },
   plugins: ["react", "prettier"],
   rules: {
-    "prettier/prettier": "error",
+    // "prettier/prettier": "error",
     // indent: ["error", 2, { offsetTernaryExpressions: false }],
     indent: "off",
     semi: [2, "always"],
