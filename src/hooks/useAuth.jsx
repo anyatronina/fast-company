@@ -69,9 +69,9 @@ const AuthProvider = ({ children }) => {
       errorCatcher(error);
       const { code, message } = error.response.data.error;
       if (code === 400) {
-        if (message === "INVALID_PASSWORD" || message === "EMAIL_NOT_FOUND") {
+        if (message === "EMAIL_NOT_FOUND" || message === "INVALID_PASSWORD") {
           const errorObject = {
-            email: "Неправильный логин и/или пароль"
+            password: "Неправильный логин и/или пароль"
           };
           throw errorObject;
         }
