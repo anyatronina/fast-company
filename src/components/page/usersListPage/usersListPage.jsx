@@ -3,27 +3,23 @@ import Pagination from "../../common/pagination";
 import GroupList from "../../common/groupList";
 import SearchStatus from "../../ui/searchStatus";
 import SearchBox from "../../common/searchBox";
-import api from "../../../api";
 import { paginate } from "../../../utils/paginate";
 import UserTable from "../../ui/usersTable";
 import _ from "lodash";
 import { useUser } from "../../../hooks/useUsers";
+import { useProfession } from "../../../hooks/useProfession";
+import { useAuth } from "../../../hooks/useAuth";
 
 const UsersListPage = () => {
   const pageSize = 4;
+  const { professions, isLoading: propfessionsLoading } = useProfession();
   const [currentPage, setCurrentPage] = useState(1);
-  const [professions, setProfessions] = useState();
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
   const [searchString, setSearchString] = useState("");
 
   const { users } = useUser();
-
-  useEffect(() => {
-    api.professions.fetchAll().then((data) => {
-      setProfessions(data);
-    });
-  }, []);
+  const { currentUser } = useAuth();
 
   const handleDelete = (userId) => {
     // setUsers((prevState) => prevState.filter((user) => user._id !== userId));
@@ -76,7 +72,7 @@ const UsersListPage = () => {
         user.name.toLowerCase().includes(searchString.toLowerCase())
       );
     }
-    return users;
+    return users.filter((user) => user._id !== currentUser._id);
   };
 
   useEffect(() => {
@@ -108,7 +104,7 @@ const UsersListPage = () => {
 
     return (
       <div className="d-flex">
-        {professions && (
+        {professions && !propfessionsLoading && (
           <div className="d-flex flex-column flex-shrink-0 p-3">
             <GroupList
               selectedItem={selectedProf}

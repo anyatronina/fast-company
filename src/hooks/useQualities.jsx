@@ -43,7 +43,6 @@ const QualitiesProvider = ({ children }) => {
 
   function getQualities(id) {
     const q = qualities.find((qual) => qual._id === id);
-    console.log(q);
     return q;
   }
 
