@@ -8,8 +8,12 @@ import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import BackHistoryButton from "../common/backButton";
 import { useAuth } from "../../hooks/useAuth";
-import { useQualities } from "../../hooks/useQualities";
-import { useProfession } from "../../hooks/useProfession";
+import { useSelector } from "react-redux";
+import { getQualities, getQualitiesLoadingStatus } from "../../store/qualities";
+import {
+  getProfessions,
+  getProfessionsLoadingStatus
+} from "../../store/professions";
 
 const EditUserPage = () => {
   const { userId } = useParams();
@@ -20,19 +24,42 @@ const EditUserPage = () => {
     history.push(`/users/${currentUser._id}/edit`);
   }
 
-  const { qualities, getQualities, isLoading: loadingQual } = useQualities();
+  const qualities = useSelector(getQualities());
+  const loadingQual = useSelector(getQualitiesLoadingStatus());
   const qualitiesList = qualities.map((q) => ({
     label: q.name,
     value: q._id
   }));
-  const { professions, isLoading: loadingProf } = useProfession();
+  const professions = useSelector(getProfessions());
+  const loadingProf = useSelector(getProfessionsLoadingStatus());
   const professionsList = professions.map((p) => ({
     label: p.name,
     value: p._id
   }));
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
-  const isLoaded = !loadingQual && !loadingProf;
+  const isLoaded = !loadingQual && !loadingProf && currentUser;
+
+  function getQualitiesListByIds(qualitiesIds) {
+    const qualitiesArray = [];
+    for (const qualId of qualitiesIds) {
+      for (const quality of qualities) {
+        if (quality._id === qualId) {
+          qualitiesArray.push(quality);
+          break;
+        }
+      }
+    }
+    return qualitiesArray;
+  }
+
+  const transformData = (data) => {
+    const result = getQualitiesListByIds(data).map((qual) => ({
+      label: qual.name,
+      value: qual._id
+    }));
+    return result;
+  };
 
   useEffect(() => {
     if (isLoaded) {
@@ -42,10 +69,7 @@ const EditUserPage = () => {
         email: currentUser.email,
         profession: currentUser.profession,
         sex: currentUser.sex,
-        qualities: currentUser.qualities.map((q) => {
-          const newQ = getQualities(q);
-          return { label: newQ.name, value: newQ._id };
-        })
+        qualities: transformData(currentUser.qualities)
       }));
     }
   }, [isLoaded]);
