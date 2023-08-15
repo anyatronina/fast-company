@@ -6,13 +6,12 @@ import SearchBox from "../../common/searchBox";
 import { paginate } from "../../../utils/paginate";
 import UserTable from "../../ui/usersTable";
 import _ from "lodash";
-import { useUser } from "../../../hooks/useUsers";
-import { useAuth } from "../../../hooks/useAuth";
 import { useSelector } from "react-redux";
 import {
   getProfessions,
   getProfessionsLoadingStatus
 } from "../../../store/professions";
+import { getCurrentUserId, getUsersList } from "../../../store/users";
 
 const UsersListPage = () => {
   const pageSize = 4;
@@ -23,8 +22,8 @@ const UsersListPage = () => {
   const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
   const [searchString, setSearchString] = useState("");
 
-  const { users } = useUser();
-  const { currentUser } = useAuth();
+  const users = useSelector(getUsersList());
+  const currentUserId = useSelector(getCurrentUserId());
 
   const handleDelete = (userId) => {
     // setUsers((prevState) => prevState.filter((user) => user._id !== userId));
@@ -77,7 +76,7 @@ const UsersListPage = () => {
         user.name.toLowerCase().includes(searchString.toLowerCase())
       );
     }
-    return users.filter((user) => user._id !== currentUser._id);
+    return users.filter((user) => user._id !== currentUserId);
   };
 
   useEffect(() => {
