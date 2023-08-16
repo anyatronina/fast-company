@@ -130,16 +130,18 @@ export const logOut = () => (dispatch) => {
   history.push("/");
 };
 
-export const updateUserData = (data) => async (dispatch) => {
-  try {
-    const { content } = await userService.create(data);
-    dispatch(userUpdated(content));
-    dispatch(loadUsersList());
-    history.push(`/users/${data._id}`);
-  } catch (error) {
-    dispatch(createUserFailed(error.message));
-  }
-};
+export const updateUserData =
+  ({ payload, redirect }) =>
+  async (dispatch) => {
+    try {
+      const { content } = await userService.update(payload);
+      dispatch(userUpdated(content));
+      dispatch(loadUsersList());
+      history.push(redirect);
+    } catch (error) {
+      dispatch(createUserFailed(error.message));
+    }
+  };
 
 function createUser(payload) {
   return async function (dispatch) {

@@ -90,8 +90,9 @@ const EditUserPage = () => {
       ...data,
       qualities: data.qualities.map((q) => q.value)
     };
+    const redirect = `/users/${currentUser._id}`;
 
-    dispatch(updateUserData(newData));
+    dispatch(updateUserData({ payload: newData, redirect }));
     // history.push(`/users/${currentUser._id}`);
   };
 
